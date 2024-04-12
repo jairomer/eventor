@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %} Add new event {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Event</h1>
+    <div class="container">
+        <div class="card mb-3">
+            <h4 class="card-title">title</h4>
+            <p class="card-text">{{details.title}}</p>
+        </div>
+        <div class="card mb-3">
+            <h4 class="card-title">subtitle </h4>
+            <p class="card-text" class="card-text">{{details.subtitle}}</p>
+        </div>
+        <div class="card mb-3">
+            <h4 class="card-title">date </h4>
+            <p class="card-text" class="card-text">{{details.date}}</p>
+        </div>
+        <div class="card mb-3">
+            <h4 class="card-title">location </h4>
+            <p class="card-text" class="card-text">{{details.location}}</p>
+        </div>
+        <div class="card mb-3">
+            <h4 class="card-title">start </h4>
+            <p class="card-text" class="card-text">{{details.start}}</p>
+        </div>
+        <div class="card mb-3">
+            <h4 class="card-title">end </h4>
+            <p class="card-text" class="card-text">{{details.end}}</p>
+        </div>
+        <a href="/eventor/event/edit/{{id}}/">
+        <input type="submit" class="btn btn-primary mb-1" value="Edit">
+        </a>
+        <a href="/eventor/event/delete/{{id}}/">
+        <input type="button" class="btn btn-primary mb-1" value="Delete">
+        </a>
+        <a href="/eventor/events/">
+        <input type="button" class="btn btn-primary mb-1" value="Back">
+        </a>
+    </div>
+</div>
+{% endblock %}

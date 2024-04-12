@@ -1,0 +1,19 @@
+.event-list {
+    padding: 5em;
+    margin: 50px;
+}
+
+.event-list-item {
+    padding: 1em;
+}
+
+.filter-bar {
+    margin: 2em;
+}
+
+#eventor-nav-menu {
+    position: sticky;
+    display: block;
+    padding: 50px;
+    background: green;
+}

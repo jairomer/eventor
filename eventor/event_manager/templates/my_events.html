@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} My Events {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Events</h1>
+    <form class="d-flex p-2" role="search" id="filter-bar" >
+        <input class="form-control me-2" type="search" placeholder="" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Filter</button>
+    </form>
+    <a href="/eventor/new_event"><button type="button" class="btn btn-info">Add new event</button></a>
+    <div class="container">
+        <div class="list-group p-1" id="event-list">
+        {% for event in my_events %}
+            <a href="/eventor/event/{{ event.id }}" class="list-group-item list-group-item-action event-list-item">
+                {{ event.title }}
+            </a>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

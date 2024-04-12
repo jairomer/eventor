@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %} Add new event {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Add New Event</h1>
+    {% if form_errors %}
+    <div class="container">
+        {% for field, valErr in form_errors.items %}
+            {% for err in valErr %}
+                {% for msg in err %}
+                    <div>
+                        <span style="color: red;">{{field}}: {{ msg }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if saved %}
+       <p class="container" style="color: green;">Changes saved</p>
+    {% endif %}
+    <form class="d-inline mb-3 form-label" method="POST" action=""> {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            {% if is_edit %}
+            <input type="text" name="title" class="form-control" value="{{details.title}}">
+            {% else %}
+            <input type="text" name="title" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="subtitle" class="form-label">Subtitle</label>
+            {% if is_edit %}
+            <input type="text" name="subtitle" class="form-control" value="{{details.subtitle}}">
+            {% else %} 
+            <input type="text" name="subtitle" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            {% if is_edit %}  
+            <input type="date" name="date" class="form-control" value="{{event_date}}">
+            {% else %} 
+            <input type="date" name="date" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location Address</label>
+            {% if is_edit %}  
+            <input type="text" name="location" class="form-control" value="{{details.location}}">
+            {% else %} 
+            <input type="text" name="location" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="start" class="form-label">Start</label>
+            {% if is_edit %}  
+            <input type="time" name="start" class="form-control" value="{{event_start_time}}">
+            {% else %} 
+            <input type="time" name="start" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="end" class="form-label">End</label>
+            {% if is_edit %}  
+            <input type="time" name="end" class="form-control" value="{{event_end_time}}">
+            {% else %} 
+            <input type="time" name="end" class="form-control">
+            {% endif %}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Save">
+        <a href="/eventor/events">
+            <input type="button" class="btn btn-primary" value="Back">
+        </a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %} Sign Up {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Sign Up</h1>
+    {% if form_errors %}
+    <div class="container">
+        {% for field, valErr in form_errors.items %}
+            {% for err in valErr %}
+                {% for msg in err %}
+                    <div>
+                        <span style="color: red;">{{field}}: {{ msg }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <form class="d-inline mb-3 form-label" method="POST" action=""> {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">User</label>
+            {% if user %}
+            <input type="text" name="username" class="form-control" value={{ user }}>
+            {% else %}
+            <input type="text" name="username" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            {% if email %}
+            <input type="text" name="email" class="form-control" value={{ email }}>
+            {% else %}
+            <input type="text" name="email" class="form-control">
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="repeated_email" class="form-label">Confirm Email</label>
+            <input type="text" name="repeated_email" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="repeated_password" class="form-label">Confirm Password</label>
+            <input type="password" name="repeated_password" class="form-control">
+        </div>
+        {% if existing %}
+        <div class="mb-3">
+            <a href="../recovery/">Forgot password?</a>
+        </div>
+        {% endif %}
+        <input type="submit" class="btn btn-primary" value="Create Account">
+    </form>
+</div>
+{% endblock %}

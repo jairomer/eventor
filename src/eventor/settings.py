@@ -18,6 +18,7 @@ import logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_URL="/eventor/login/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "event_manager",
+    "eventor_auth",
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,10 @@ ROOT_URLCONF = "eventor.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [f"{os.getcwd()}/event_manager/templates"],
+        "DIRS": [
+            f"{os.getcwd()}/event_manager/templates",
+            f"{os.getcwd()}/eventor_auth/templates",
+            ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -152,6 +157,11 @@ LOGGING = {
             'propagate': True,
         },
         'event_manager': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'eventor_auth': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,

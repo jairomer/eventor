@@ -1,13 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpRequest
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
 from event_manager.forms import EventForm
 from event_manager.models import EventModel
 
 import logging
 logger = logging.getLogger(__name__)
 
+@login_required(login_url='/eventor/login')
 def get_events(request: HttpRequest) -> HttpResponse:
     logger.debug(f"Getting all events for user {request.user}")
     all_events = EventModel.objects.all()
@@ -17,6 +19,7 @@ def get_events(request: HttpRequest) -> HttpResponse:
         events.append({"title": event.title, "id": event.id})
     return render(request, "my_events.html", {"my_events": events})
 
+@login_required(login_url='/eventor/login')
 def new_event(request: HttpRequest) -> HttpResponse:
     "Receives a request to create a new event."
     logger.debug(f"User {request.user} entering new event page.")
@@ -54,6 +57,7 @@ def new_event(request: HttpRequest) -> HttpResponse:
 
     return render(request, "new_or_edit_event.html", template_state)
 
+@login_required(login_url='/eventor/login')
 def delete_event(request: HttpRequest, id: int) -> HttpResponse:
     "Receives a request to delete an existing event and return to the event page."
     logger.debug(f"User {request.user} attempting to delete event with id={id}.")
@@ -65,6 +69,7 @@ def delete_event(request: HttpRequest, id: int) -> HttpResponse:
         logger.debug(f"Event {details} does not exist.")
     return get_events(request)
 
+@login_required(login_url='/eventor/login')
 def edit_event(request: HttpRequest, id: int) -> HttpResponse:
     "Given an existing event, we want to edit it."
     logger.debug(f"User {request.user} attempting to edit event with id={id}.")
@@ -99,6 +104,7 @@ def edit_event(request: HttpRequest, id: int) -> HttpResponse:
     
     return render(request, "new_or_edit_event.html", template_state)
 
+@login_required(login_url='/eventor/login')
 def event_details(request: HttpRequest, id: int) -> HttpResponse:
     "Given an event id, fetch it from the database and present it."
     logger.debug(f"User {request.user} attempting to accessing event with id={id}.")

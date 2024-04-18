@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block titlj %} Login {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Login</h1>
+    {% if not_found %}
+        <div>
+            <span style="color: red;">Not found</span>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div>
+            <span style="color: red;">Cannot log in right now, try again later.</span>
+        </div>
+    {% endif %}
+    <form class="d-inline mb-3 form-label" method="POST" action=""> {% csrf_token %}
+        <div class="mb-3">
+            <label for="username" class="form-label">User</label>
+            <input type="text" name="username" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control">
+            <a href="../recovery/">Forgot password?</a>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Login">
+        <a href="../signin/">
+            <input type="button" class="btn btn-secondary" value="Register">
+        </a>
+    </form>
+</div>
+
+{% endblock %}

@@ -16,11 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from event_manager.views import get_events
-from event_manager.views import new_event
-from event_manager.views import event_details
-from event_manager.views import edit_event
-from event_manager.views import delete_event
+from event_manager.views import get_events, new_event, event_details, edit_event, delete_event
+from eventor_auth.views import loginUser, logoutUser, signin, account_recovery, password_reset
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,4 +26,9 @@ urlpatterns = [
     path("eventor/event/<int:id>/", event_details),
     path("eventor/event/edit/<int:id>/", edit_event),
     path("eventor/event/delete/<int:id>/", delete_event),
+    path("eventor/login/", loginUser),
+    path("eventor/logout/", logoutUser),
+    path("eventor/signin/", signin),
+    path("eventor/recovery/", account_recovery),
+    path("eventor/recovery/<int:id>/", password_reset),
 ]

@@ -31,4 +31,5 @@ urlpatterns = [
     path("eventor/signin/", signin),
     path("eventor/recovery/", account_recovery),
     path("eventor/recovery/<int:id>/", password_reset),
+    path("", get_events),
 ]

@@ -13,25 +13,31 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import sys
-import logging
 
+import logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOGIN_URL="/eventor/login/"
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+if DEBUG:
+    logging.info("Django running in DEBUG mode.")
+    LOG_LEVEL = "DEBUG"
+else:
+    LOG_LEVEL = "INFO"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-e6)_e&bxrcsr7m()$wf=%477$7lc-icb$rvb&)k#11kem%ad_!"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 if DEBUG:
-    LOG_LEVEL = "DEBUG"
+    SECRET_KEY = "django-insecure-e6)_e&bxrcsr7m()$wf=%477$7lc-icb$rvb&)k#11kem%ad_!"
 else:
-    LOG_LEVEL = "INFO"
+    logging.info("Django SECRET_KEY fetched from the environment.")
+    SECRET_KEY = os.environ["SECRET_KEY"]
+
 
 ALLOWED_HOSTS = []
 

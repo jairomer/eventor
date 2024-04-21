@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from event_manager.forms import EventForm
 from event_manager.models import EventModel
@@ -12,8 +13,7 @@ logger = logging.getLogger(__name__)
 @login_required(login_url='/eventor/login')
 def get_events(request: HttpRequest) -> HttpResponse:
     logger.debug(f"Getting all events for user {request.user}")
-    all_events = EventModel.objects.all()
-    # TODO: Get only the events for this user.
+    all_events = EventModel.objects.all().filter(owner__id=request.user.id)
     events = []
     for event in all_events:
         events.append({"title": event.title, "id": event.id})
@@ -24,13 +24,6 @@ def new_event(request: HttpRequest) -> HttpResponse:
     "Receives a request to create a new event."
     logger.debug(f"User {request.user} entering new event page.")
     newEvent = EventModel()
-    #template_state = {
-    #        "new_event_form": newEvent,
-    #        "form_errors": None,
-    #        "details" : None,
-    #        "is_edit": False,
-    #    }
-
     template_state = {
             "id": id,
             "is_edit": True,
@@ -43,6 +36,7 @@ def new_event(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         newEventForm = EventForm(request.POST, instance=newEvent)
         if newEventForm.is_valid():
+            newEvent.owner = User.objects.get(id=request.user.id)
             logger.debug(f"User {request.user} created new event: {newEvent}.")
             newEventForm.save()
             template_state["event_date"] = newEventForm.cleaned_data["date"]

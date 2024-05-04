@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "eventor-api"
+version = "0.1.0"
+description = "FastAPI instance to access the eventor service."
+authors = ["synk <jairomer@protonmail.com>"]
+license = "GNUv3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

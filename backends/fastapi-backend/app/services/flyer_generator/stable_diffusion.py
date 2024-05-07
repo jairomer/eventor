@@ -20,7 +20,7 @@ def get_images(
     """
     if url is None or url == "":
         print("Cannot get images: No Stable Diffusion endpoint defined.")
-        return None
+        return []
 
     payload = {
       "prompt": prompt,

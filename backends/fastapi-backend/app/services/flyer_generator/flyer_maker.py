@@ -1,5 +1,5 @@
-from PIL import Image, ImageDraw
-import logging
+from PIL.Image import Image
+from PIL import ImageDraw
 
 from . import flyer
 from . import fonts

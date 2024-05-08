@@ -19,7 +19,7 @@ def get_images(
     then use a scaling technique using the API to get the thing at the request resolution.
     """
     if url is None or url == "":
-        print("Cannot get images: No Stable Diffusion endpoint defined.")
+        logging.error("Cannot get images: No Stable Diffusion endpoint defined.")
         return []
 
     payload = {

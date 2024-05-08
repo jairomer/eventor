@@ -1,13 +1,12 @@
-from fastapi.testclient import TestClient
+import logging
 
-from .main import app, NewFlyerRequest, NewFlyerDetails
+from fastapi.testclient import TestClient
+from PIL import ImageShow, Image
+from io import BytesIO
+
+from .main import app, NewFlyerRequest, NewFlyerDetails, NewFlyerResponse
 
 client = TestClient(app)
-
-#def test_read_main():
-#    response = client.get("/")
-#    assert response.status_code == 200
-#    assert response.json() == {"msg": "Hello World"}
 
 def test_generate_flyer():
     details = NewFlyerDetails(
@@ -26,6 +25,12 @@ def test_generate_flyer():
 
     response = client.post("/flyer", content=request.model_dump_json())
    
-    # Stable diffusion is not set, so the service is unavailable.
-    assert response.status_code == 503
+    assert response.status_code == 200
+
+    content = NewFlyerResponse.model_validate_json(response.content)
+
+    assert content.form == request
+    assert len(content.flyers_uris) == 5
+    
+
     

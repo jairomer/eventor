@@ -1,10 +1,10 @@
-from PIL.Image import Image
+from PIL import Image
 from PIL import ImageDraw
 
 from . import flyer
 from . import fonts
 
-def make_flyer_from_image(flyer_data: flyer.FlyerData, base : Image, metro_path=None) -> Image:
+def make_flyer_from_image(flyer_data: flyer.FlyerData, base : Image.Image, metro_path=None) -> Image.Image:
     """
     Given flyer data and a PIL.Image to use as background, put the data on the background after applying a dark overlay.
     """

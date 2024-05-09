@@ -1,69 +1,27 @@
-from typing import Optional, Tuple, List, Final
 import io
 import logging
-import threading 
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
-from pydantic import BaseModel
-from starlette.types import HTTPExceptionHandler
+from fastapi.responses import StreamingResponse
 
-from .services.flyer_generator.flyer_maker import make_flyer_from_image
-from .services.flyer_generator.stable_diffusion import get_images
-from .services.flyer_generator.flyer import Flyer, FlyerData
+from app.services.flyer_generator.flyer import FlyerData
+from app.services.flyer_generator.flyer_maker import make_flyer_from_image
+from app.services.flyer_generator.stable_diffusion import get_images
+
+from app.models.new_flyer import NewFlyerRequest, NewFlyerResponse
+from app.models.flyer_storage import FlyerStorage
 
 app = FastAPI()
-
-class NewFlyerDetails(BaseModel):
-    title: str
-    subtitle: str
-    date: str
-    timeframe: str
-    place: str
-    metro: Optional[str] = None
-
-class NewFlyerRequest(BaseModel):
-    prompt: str
-    size: Tuple[int, int]
-    batch_size: int
-    details: NewFlyerDetails
-
-    def generate_flyer_data_from_details(self) -> FlyerData:
-        return FlyerData(
-            title = self.details.title,
-            subtitle = self.details.subtitle,
-            date = self.details.date,
-            timeframe = self.details.timeframe,
-            place = self.details.place,
-            metro = self.details.metro)
-
-class NewFlyerResponse(BaseModel):
-    form: NewFlyerRequest
-    flyers_uris: List[str]
-
-
-class FlyerStorage:
-    __flyers = dict()
-    __lock = threading.Lock()
-    MAX_IN_MEMORY: Final = 3000
-
-    def store(self, flyer: io.BytesIO) -> str | None:
-        with self.__lock:
-            h = str(hash(flyer))
-            self.__flyers[h] = flyer
-            if len(self.__flyers) > FlyerStorage.MAX_IN_MEMORY:
-                logging.error("Too many images in memory")
-                return None
-            return h
-
-    def get(self, h) -> io.BytesIO | None:
-        with self.__lock:
-            flyer = self.__flyers.get(h) 
-            if flyer:
-                self.__flyers.pop(h)
-            return flyer
-
 storage = FlyerStorage()
+
+def generate_flyer_data_from_details(request: NewFlyerRequest) -> FlyerData:
+    return FlyerData(
+        title = request.details.title,
+        subtitle = request.details.subtitle,
+        date = request.details.date,
+        timeframe = request.details.timeframe,
+        place = request.details.place,
+        metro = request.details.metro)
 
 @app.get("/flyer/{uri}")
 async def get_flyer(uri: str):
@@ -92,7 +50,7 @@ async def generate_flyer(new_flyer_request: NewFlyerRequest):
 
     # Modify images
     flyers = []
-    flyer_data = new_flyer_request.generate_flyer_data_from_details()
+    flyer_data = generate_flyer_data_from_details(new_flyer_request)
     for image in images:
         flyer = make_flyer_from_image(flyer_data, image, METRO_PATH)
         flyer = flyer.convert("RGB")

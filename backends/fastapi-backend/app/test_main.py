@@ -1,10 +1,7 @@
-import logging
-
 from fastapi.testclient import TestClient
-from PIL import ImageShow, Image
-from io import BytesIO
 
-from .main import app, NewFlyerRequest, NewFlyerDetails, NewFlyerResponse
+from .main import app
+from app.models.new_flyer import NewFlyerRequest, NewFlyerDetails, NewFlyerResponse
 
 client = TestClient(app)
 

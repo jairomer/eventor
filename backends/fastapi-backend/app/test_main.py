@@ -1,11 +1,15 @@
 from fastapi.testclient import TestClient
 
+from app.core.settings.app_settings import get_settings
+
 from .main import app
 from app.models.new_flyer import NewFlyerRequest, NewFlyerDetails, NewFlyerResponse
 
 client = TestClient(app)
 
 def test_generate_flyer():
+    if not get_settings().TEST_END_TO_END: 
+        return 
     details = NewFlyerDetails(
         title="Silent Meditation Course",
         subtitle="no speech",

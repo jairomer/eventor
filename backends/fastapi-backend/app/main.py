@@ -7,12 +7,11 @@ from fastapi.responses import StreamingResponse
 from app.services.flyer_generator.flyer import FlyerData
 from app.services.flyer_generator.flyer_maker import make_flyer_from_image
 from app.services.flyer_generator.stable_diffusion import get_images
-
 from app.models.new_flyer import NewFlyerRequest, NewFlyerResponse
-from app.models.flyer_storage import FlyerStorage
+from app.models.flyer_storage import get_storage
+from app.core.settings.app_settings import get_settings
 
 app = FastAPI()
-storage = FlyerStorage()
 
 def generate_flyer_data_from_details(request: NewFlyerRequest) -> FlyerData:
     return FlyerData(
@@ -25,7 +24,7 @@ def generate_flyer_data_from_details(request: NewFlyerRequest) -> FlyerData:
 
 @app.get("/flyer/{uri}")
 async def get_flyer(uri: str):
-    global storage
+    storage = get_storage()
     flyer = storage.get(uri)
     if flyer:
         flyer.seek(0)
@@ -34,12 +33,10 @@ async def get_flyer(uri: str):
 
 @app.post("/flyer")
 async def generate_flyer(new_flyer_request: NewFlyerRequest):
-    STABLE_DIFUSSION_INSTANCE = ""
-    METRO_PATH = None
-    global storage
+    storage = get_storage()
     # Get images
     images = get_images(
-        url=STABLE_DIFUSSION_INSTANCE,
+        url=get_settings().STABLE_DIFUSSION_INSTANCE,
         prompt=new_flyer_request.prompt,
         img_size=new_flyer_request.size,
         batch_size=new_flyer_request.batch_size)
@@ -52,7 +49,7 @@ async def generate_flyer(new_flyer_request: NewFlyerRequest):
     flyers = []
     flyer_data = generate_flyer_data_from_details(new_flyer_request)
     for image in images:
-        flyer = make_flyer_from_image(flyer_data, image, METRO_PATH)
+        flyer = make_flyer_from_image(flyer_data, image, get_settings().METRO_PATH)
         flyer = flyer.convert("RGB")
         flyer_bytes = io.BytesIO()
         flyer.save(flyer_bytes, "JPEG", quality=95)

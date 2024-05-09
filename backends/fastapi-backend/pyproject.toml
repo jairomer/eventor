@@ -12,6 +12,8 @@ pytest = "^8.2.0"
 fastapi = "^0.111.0"
 pillow = "^10.3.0"
 requests = "^2.31.0"
+pydantic-settings = "^2.2.1"
+python-dotenv = "^1.0.1"
 
 
 [build-system]

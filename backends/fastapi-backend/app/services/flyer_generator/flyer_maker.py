@@ -4,7 +4,7 @@ from PIL import ImageDraw
 from . import flyer
 from . import fonts
 
-def make_flyer_from_image(flyer_data: flyer.FlyerData, base : Image.Image, metro_path=None) -> Image.Image:
+def make_flyer_from_image(flyer_data: flyer.FlyerData, base : Image.Image, metro_path="") -> Image.Image:
     """
     Given flyer data and a PIL.Image to use as background, put the data on the background after applying a dark overlay.
     """
@@ -60,7 +60,7 @@ def make_flyer_from_image(flyer_data: flyer.FlyerData, base : Image.Image, metro
             fill=(255,255,255,255))
     flyerseeker.increment_yposition()
     
-    if metro_path != None:
+    if metro_path != "":
         # Add metro
         metro_logo = Image.open(metro_path)
         # Obtain scale ratio according to scaled font height

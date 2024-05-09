@@ -1,4 +1,6 @@
 from fastapi.testclient import TestClient
+from PIL import Image
+import io
 
 from app.core.settings.app_settings import get_settings
 
@@ -33,5 +35,10 @@ def test_generate_flyer():
     assert content.form == request
     assert len(content.flyers_uris) == 5
     
-
-    
+    # Now get the images.
+    for uri in content.flyers_uris:
+        uri_response = client.get(uri)
+        assert uri_response.status_code == 200
+        #img = Image.open(io.BytesIO(uri_response.content))
+        #img.save("./tests/{}.jpeg".format(uri))
+        

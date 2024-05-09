@@ -1,6 +1,9 @@
 test:
 	pytest .
 
+generate-api-key:
+	./setenvkey.sh
+
 run:
 	uvicorn main:app --app-dir ./app
 

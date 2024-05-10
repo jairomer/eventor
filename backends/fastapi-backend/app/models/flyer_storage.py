@@ -9,6 +9,14 @@ from app.core.settings.app_settings import AppSettings, get_settings
 class FlyerStorage:
     """
     This is a simple in-memory key/value cache to hold images until they are delivered to a client.
+
+    Attention:
+        This works if you have a single instance of the service, but if several replicas are created,
+        it is important that the request is directed to the right replica, which can complicate operations,
+        so this is not the best solution for horizontally scalable deployments.
+
+        However, this is not yet a problem we need to solve. If it becomes one, then the next step
+        would be to use something like Redis or Memcached instead of a dictionary.
     """
     __flyers = dict()
     __lock = threading.Lock()

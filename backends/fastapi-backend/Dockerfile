@@ -1,21 +1,17 @@
-FROM python:3.9.10-slim
+FROM python:3.12.3-alpine3.18
 
-ENV PYTHONUNBUFFERED 1
-
-EXPOSE 8000
 WORKDIR /app
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends netcat && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY app /app
+COPY requirements.txt /app/
 
-COPY poetry.lock pyproject.toml ./
-RUN pip install poetry==1.1 && \
-    poetry config virtualenvs.in-project true && \
-    poetry install --no-dev
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
-COPY . ./
+RUN pip install -r requirements.txt
+# Use dependencies installed for this user.
+ENV PATH="${PATH}:/home/appuser/.local/bin"
 
-#CMD poetry run alembic upgrade head && \
-#    poetry run uvicorn --host=0.0.0.0 app.main:app
-RUN  poetry run uvicorn --host=0.0.0.0 app.main:app
+EXPOSE 8000
+#CMD ["uvicorn", "main:app", "--port=8000", "--host=0.0.0.0", "--app-dir", "/app"]
+CMD ["fastapi", "run", "/app/main.py", "--proxy-headers", "--port", "8000"]
